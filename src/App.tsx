@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import Container from '@material-ui/core/Container'
+import Header from './components/Header'
+import Footer from './components/Footer'
+import HomeContent from './pages/HomeContent'
+import VisualizationsContent from './pages/VisualizationsContent'
+import SettingsContent from './pages/SettingsContent'
+import {HOME, SETTINGS, VISUALIZATIONS} from './general/constants'
 
-function App() {
+const App = () => {
+  const [activePage, setActivePage] = useState(HOME)
+
+  const pageContent = () => {
+    switch(activePage) {
+      case HOME:
+        return <HomeContent />
+      case VISUALIZATIONS:
+        return <VisualizationsContent />
+      case SETTINGS: 
+        return <SettingsContent />
+      default: 
+        return <HomeContent />
+    }    
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Container>
+      <Header />
+      {pageContent()}
+      <Footer setActivePage={setActivePage} />
+    </Container>
+  )
 }
-
-export default App;
+export default App
