@@ -24,22 +24,22 @@ const TemperatureBarChart = (props: TemperatureBarChartProps) => {
   temperatureMeasurements.forEach(element => {
     let elem = element
     elem.measurementDate = timestampToDate(
-      parseInt(element.measurementDate) * 1000
+      parseInt(element.measurementDate)
     )
     temperatureMeasurementsWithTimestampsAsDates.push(elem)
   })
-  console.log(temperatureMeasurementsWithTimestampsAsDates)
+  // console.log(temperatureMeasurementsWithTimestampsAsDates)
 
   return (
     <ResponsiveContainer>
       <BarChart
-        width={400}
+        width={600}
         height={300}
         data={temperatureMeasurementsWithTimestampsAsDates}
       >
         <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey='name' />
-        <YAxis />
+        <XAxis dataKey='measurementDate' />
+        <YAxis domain={[10, 40]} />
         <Tooltip />
         <Legend />
         <Bar dataKey='temperature' fill='#8884d8' />

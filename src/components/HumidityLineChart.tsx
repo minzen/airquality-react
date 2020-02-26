@@ -32,16 +32,16 @@ const HumidityLineChart = (props: HumidityLineChartProps) => {
   humidityMeasurements.forEach(element => {
     let elem = element
     elem.measurementDate = timestampToDate(
-      parseInt(element.measurementDate) * 1000
+      parseInt(element.measurementDate)
     )
     humidityMeasurementsWithTimestampsAsDates.push(elem)
   })
-  console.log(humidityMeasurementsWithTimestampsAsDates)
+  // console.log(humidityMeasurementsWithTimestampsAsDates)
 
   return (
     <ResponsiveContainer className={classes.container}>
       <LineChart
-        width={400}
+        width={600}
         height={300}
         data={humidityMeasurementsWithTimestampsAsDates}
       >
