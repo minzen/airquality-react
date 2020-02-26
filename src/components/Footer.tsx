@@ -23,7 +23,7 @@ const Footer = ({setActivePage}:any) => {
       <BottomNavigation
         value={value}
         onChange={(event, newValue) => {
-          console.log('setting value to', newValue)
+          console.log('setting page navigation to', newValue)
           setActivePage(newValue)
         }}
         showLabels

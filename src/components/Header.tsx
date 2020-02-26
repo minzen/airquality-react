@@ -5,8 +5,8 @@ import logoImg from '../assets/img/logo_transparent.png'
 
 const useStyles = makeStyles({
   media: {
-    height: 0,
-    paddingTop: '50.00%', 
+    height: 10,
+    paddingTop: '35.00%', 
   },
 })
 

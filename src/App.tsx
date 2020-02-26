@@ -40,7 +40,7 @@ const App = () => {
   }
 
   return (
-    <Container>
+    <Container maxWidth="md">
       <Header />
       {pageContent()}
       <Footer setActivePage={setActivePage} />
