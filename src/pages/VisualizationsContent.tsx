@@ -44,7 +44,7 @@ const VisualizationsContent = () => {
     return <p>error</p>
   }
   const measurementsCount = data.measurements.length
-  const measurements = data.measurements.slice(measurementsCount - 11, measurementsCount - 1)
+  const measurements = data.measurements.reverse().slice(0, measurementsCount)
 
   return (
     <>
