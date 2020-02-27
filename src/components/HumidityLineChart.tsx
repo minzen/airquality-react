@@ -10,12 +10,8 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts'
-import Measurement from './MeasurementType'
+import ChartProps from '../interfaces/ChartProps'
 import { timestampToDate } from '../utils/utils'
-
-interface HumidityLineChartProps {
-  data: Array<Measurement>
-}
 
 const useStyles = makeStyles({
   container: {
@@ -23,7 +19,7 @@ const useStyles = makeStyles({
   }
 })
 
-const HumidityLineChart = (props: HumidityLineChartProps) => {
+const HumidityLineChart = (props: ChartProps) => {
   const classes = useStyles()
   const humidityMeasurements = props.data.map(
     ({ measurementDate, humidity }) => ({ measurementDate, humidity })

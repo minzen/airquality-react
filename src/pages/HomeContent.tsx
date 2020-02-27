@@ -1,8 +1,5 @@
 import React from 'react'
-
-interface HomeContentProps {
-    numberOfMeasurements: number
-}
+import HomeContentProps from '../interfaces/HomeContentProps'
 
 const HomeContent = (props: HomeContentProps) => {
     return (

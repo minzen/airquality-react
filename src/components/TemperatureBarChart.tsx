@@ -10,13 +10,9 @@ import {
   ResponsiveContainer
 } from 'recharts'
 import { timestampToDate } from '../utils/utils'
-import Measurement from '../components/MeasurementType'
+import ChartProps from '../interfaces/ChartProps'
 
-interface TemperatureBarChartProps {
-  data: Array<Measurement>
-}
-
-const TemperatureBarChart = (props: TemperatureBarChartProps) => {
+const TemperatureBarChart = (props: ChartProps) => {
   const temperatureMeasurements = props.data.map(
     ({ measurementDate, temperature }) => ({ measurementDate, temperature })
   )

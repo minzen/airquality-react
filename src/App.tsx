@@ -10,7 +10,7 @@ import { HOME, SETTINGS, VISUALIZATIONS } from './general/constants'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-const NUMBER_OF_MEASUREMENTS = gql` 
+const NUMBER_OF_MEASUREMENTS = gql`
   query {
     numberOfMeasurements
   }
@@ -22,6 +22,7 @@ const App = () => {
   if (loading) {
     return <CircularProgress />
   }
+
   if (error) {
     return <p>Error</p>
   }
