@@ -15,7 +15,7 @@ import ChartProps from '../interfaces/ChartProps'
 
 const useStyles = makeStyles({
   container: {
-    marginBottom: 30,
+    marginBottom: 50,
     backgroundColor: '#ffffff'
   }
 })

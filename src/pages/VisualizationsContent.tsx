@@ -1,6 +1,6 @@
 import React from 'react'
 import { Grid, CircularProgress } from '@material-ui/core'
-import TemperatureBarChart from '../components/TemperatureBarChart'
+import TemperatureChart from '../components/TemperatureChart'
 import HumidityLineChart from '../components/HumidityLineChart'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
@@ -28,10 +28,10 @@ const VisualizationsContent = () => {
   const measurements = data.measurements.reverse().slice(0, measurementsCount)
 
   return (
-    <Grid item xs>
-        <TemperatureBarChart data={measurements} />
+      <Grid item xs>
+        <TemperatureChart data={measurements} />
         <HumidityLineChart data={measurements} />
-    </Grid>
+      </Grid>
   )
 }
 export default VisualizationsContent
