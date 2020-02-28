@@ -7,7 +7,6 @@ import { ApolloClient } from 'apollo-client'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
 import { HttpLink } from 'apollo-link-http'
-require('dotenv').config()
 
 const APOLLO_SERVER_URI = process.env.REACT_APP_APOLLO_SERVER_URI
 
