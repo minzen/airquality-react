@@ -9,7 +9,7 @@ const useStyles = makeStyles({
   }
 })
 
-const AboutContent = (props: AboutContentProps) => {
+const AboutContent = (props: AboutContentProps): JSX.Element => {
   const classes = useStyles()
 
   return (

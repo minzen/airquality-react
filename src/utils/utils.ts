@@ -1,4 +1,4 @@
-export const timestampToDate = (ts: any) => {
+export const timestampToDate = (ts: number): string => {
   if (ts) {
     return new Intl.DateTimeFormat('de-DE', {
       year: 'numeric',

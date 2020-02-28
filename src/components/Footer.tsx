@@ -5,6 +5,7 @@ import BarChartIcon from '@material-ui/icons/BarChart'
 // import SettingsIcon from '@material-ui/icons/Settings'
 import { makeStyles } from '@material-ui/core/styles'
 import {ABOUT, /*SETTINGS,*/ VISUALIZATIONS} from '../general/constants'
+import FooterProps from '../interfaces/FooterProps'
 
 const useStyles = makeStyles({
   bottomNavi: {
@@ -15,7 +16,7 @@ const useStyles = makeStyles({
   }
 })
 
-const Footer = ({setActivePage}:any) => {
+const Footer = (props: FooterProps): JSX.Element => {
   const classes = useStyles()
   let value
   return (
@@ -24,7 +25,7 @@ const Footer = ({setActivePage}:any) => {
         value={value}
         onChange={(event, newValue) => {
           console.log('setting page navigation to', newValue)
-          setActivePage(newValue)
+          props.setActivePage(newValue)
         }}
         showLabels
         className={classes.bottomNavi}

@@ -24,7 +24,7 @@ const NUMBER_OF_MEASUREMENTS = gql`
   }
 `
 
-const App = () => {
+const App = (): JSX.Element => {
   const [activePage, setActivePage] = useState(VISUALIZATIONS)
   const { loading, error, data } = useQuery(NUMBER_OF_MEASUREMENTS)
   const classes = useStyles()
@@ -36,9 +36,12 @@ const App = () => {
   if (error) {
     return <p>Error</p>
   }
-  const measurementCount = data.numberOfMeasurements
+  let measurementCount: number
+  if (data) {
+    measurementCount = data.numberOfMeasurements
+  }
 
-  const pageContent = () => {
+  const pageContent = (): JSX.Element => {
     switch (activePage) {
       case ABOUT:
         return <AboutContent numberOfMeasurements={measurementCount} />

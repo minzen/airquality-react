@@ -1,44 +1,44 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  BarChart,
+  LineChart,
   XAxis,
   YAxis,
   Tooltip,
   CartesianGrid,
-  Bar,
+  Line,
   Legend,
   ResponsiveContainer,
-  LineChart,
-  Line
+  BarChart,
+  Bar
 } from 'recharts'
+import { Button, Menu, MenuItem } from '@material-ui/core'
 import { timestampToDate } from '../utils/utils'
 import ChartProps from '../interfaces/ChartProps'
-import { Button, Menu, MenuItem } from '@material-ui/core'
 import { LINE, BAR } from '../general/constants'
 
 const useStyles = makeStyles({
   container: {
-    marginBottom: 30,
+    marginBottom: 50,
     backgroundColor: '#ffffff'
   }
 })
 
-const TemperatureChart = (props: ChartProps): JSX.Element => {
+const HumidityChart = (props: ChartProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState()
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
-  const [chartType, setChartType] = useState(BAR)
-  const classes = useStyles()
-  const temperatureMeasurements = props.data.map(
-    ({ measurementDate, temperature }) => ({ measurementDate, temperature })
+  const [chartType, setChartType] = useState(LINE)
+  const humidityMeasurements = props.data.map(
+    ({ measurementDate, humidity }) => ({ measurementDate, humidity })
   )
-  const temperatureMeasurementsWithTimestampsAsDates = new Array<any>()
-  temperatureMeasurements.forEach(element => {
+  const classes = useStyles()
+  const humidityMeasurementsWithTimestampsAsDates = new Array<any>()
+  humidityMeasurements.forEach(element => {
     const elem = element
     elem.measurementDate = timestampToDate(parseInt(element.measurementDate))
-    temperatureMeasurementsWithTimestampsAsDates.push(elem)
+    humidityMeasurementsWithTimestampsAsDates.push(elem)
   })
-  // console.log(temperatureMeasurementsWithTimestampsAsDates)
+  // console.log(humidityMeasurementsWithTimestampsAsDates)
 
   const recordButtonPosition = (event: any): void => {
     setAnchorEl(event.currentTarget)
@@ -52,24 +52,24 @@ const TemperatureChart = (props: ChartProps): JSX.Element => {
   const chart = (): JSX.Element => {
     if (chartType === BAR) {
       return (
-        <BarChart data={temperatureMeasurementsWithTimestampsAsDates}>
+        <BarChart data={humidityMeasurementsWithTimestampsAsDates}>
           <CartesianGrid strokeDasharray='3 3' />
           <XAxis dataKey='measurementDate' />
-          <YAxis domain={[10, 40]} />
+          <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey='temperature' fill='#8884d8' />
+          <Bar dataKey='humidity' fill='#8884d8' />
         </BarChart>
       )
     } else if (chartType === LINE) {
       return (
-        <LineChart data={temperatureMeasurementsWithTimestampsAsDates}>
+        <LineChart data={humidityMeasurementsWithTimestampsAsDates}>
           <CartesianGrid strokeDasharray='5 5' />
           <XAxis dataKey='measurementDate' />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type='monotone' dataKey='temperature' stroke='#8884d8' />
+          <Line type='monotone' dataKey='humidity' stroke='#8884d8' />
         </LineChart>
       )
     }
@@ -110,4 +110,4 @@ const TemperatureChart = (props: ChartProps): JSX.Element => {
     </>
   )
 }
-export default TemperatureChart
+export default HumidityChart
