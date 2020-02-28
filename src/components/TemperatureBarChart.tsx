@@ -1,4 +1,5 @@
 import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import {
   BarChart,
   XAxis,
@@ -12,7 +13,15 @@ import {
 import { timestampToDate } from '../utils/utils'
 import ChartProps from '../interfaces/ChartProps'
 
+const useStyles = makeStyles({
+  container: {
+    marginBottom: 30,
+    backgroundColor: '#ffffff'
+  }
+})
+
 const TemperatureBarChart = (props: ChartProps) => {
+  const classes = useStyles()
   const temperatureMeasurements = props.data.map(
     ({ measurementDate, temperature }) => ({ measurementDate, temperature })
   )
@@ -27,10 +36,8 @@ const TemperatureBarChart = (props: ChartProps) => {
   // console.log(temperatureMeasurementsWithTimestampsAsDates)
 
   return (
-    <ResponsiveContainer>
+    <ResponsiveContainer width="95%" height={400} className={classes.container}>
       <BarChart
-        width={600}
-        height={300}
         data={temperatureMeasurementsWithTimestampsAsDates}
       >
         <CartesianGrid strokeDasharray='3 3' />

@@ -1,13 +1,13 @@
 import React from 'react'
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core'
-import HomeIcon from '@material-ui/icons/Home'
+import InfoIcon from '@material-ui/icons/Info'
 import BarChartIcon from '@material-ui/icons/BarChart'
 // import SettingsIcon from '@material-ui/icons/Settings'
 import { makeStyles } from '@material-ui/core/styles'
-import {HOME, /*SETTINGS,*/ VISUALIZATIONS} from '../general/constants'
+import {ABOUT, /*SETTINGS,*/ VISUALIZATIONS} from '../general/constants'
 
 const useStyles = makeStyles({
-  stickToBottom: {
+  bottomNavi: {
     width: '100%',
     position: 'fixed',
     bottom: 0,
@@ -20,16 +20,16 @@ const Footer = ({setActivePage}:any) => {
   let value
   return (
     <>
-      <BottomNavigation
+      <BottomNavigation 
         value={value}
         onChange={(event, newValue) => {
           console.log('setting page navigation to', newValue)
           setActivePage(newValue)
         }}
         showLabels
-        className={classes.stickToBottom}
+        className={classes.bottomNavi}
       >
-        <BottomNavigationAction label='Home' icon={<HomeIcon />} value={HOME} />
+        <BottomNavigationAction label='Info' icon={<InfoIcon />} value={ABOUT} />
         <BottomNavigationAction
           label='Visualizations'
           icon={<BarChartIcon />}

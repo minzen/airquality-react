@@ -10,37 +10,32 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts'
-import ChartProps from '../interfaces/ChartProps'
 import { timestampToDate } from '../utils/utils'
+import ChartProps from '../interfaces/ChartProps'
 
 const useStyles = makeStyles({
   container: {
-    marginBottom: 20
+    marginBottom: 30,
+    backgroundColor: '#ffffff'
   }
 })
 
 const HumidityLineChart = (props: ChartProps) => {
-  const classes = useStyles()
   const humidityMeasurements = props.data.map(
     ({ measurementDate, humidity }) => ({ measurementDate, humidity })
   )
+  const classes = useStyles()
   const humidityMeasurementsWithTimestampsAsDates = new Array<any>()
   humidityMeasurements.forEach(element => {
     let elem = element
-    elem.measurementDate = timestampToDate(
-      parseInt(element.measurementDate)
-    )
+    elem.measurementDate = timestampToDate(parseInt(element.measurementDate))
     humidityMeasurementsWithTimestampsAsDates.push(elem)
   })
   // console.log(humidityMeasurementsWithTimestampsAsDates)
 
   return (
-    <ResponsiveContainer className={classes.container}>
-      <LineChart
-        width={600}
-        height={300}
-        data={humidityMeasurementsWithTimestampsAsDates}
-      >
+    <ResponsiveContainer width='95%' height={400} className={classes.container}>
+      <LineChart data={humidityMeasurementsWithTimestampsAsDates}>
         <CartesianGrid strokeDasharray='5 5' />
         <XAxis dataKey='measurementDate' />
         <YAxis />

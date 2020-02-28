@@ -1,14 +1,22 @@
 import React, { useState } from 'react'
-import Container from '@material-ui/core/Container'
+import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import HomeContent from './pages/HomeContent'
+import AboutContent from './pages/AboutContent'
 import VisualizationsContent from './pages/VisualizationsContent'
 import SettingsContent from './pages/SettingsContent'
-import { HOME, SETTINGS, VISUALIZATIONS } from './general/constants'
+import { ABOUT, SETTINGS, VISUALIZATIONS } from './general/constants'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+    backgroundColor: '#657a77'
+  }
+})
 
 const NUMBER_OF_MEASUREMENTS = gql`
   query {
@@ -17,8 +25,10 @@ const NUMBER_OF_MEASUREMENTS = gql`
 `
 
 const App = () => {
-  const [activePage, setActivePage] = useState(HOME)
+  const [activePage, setActivePage] = useState(VISUALIZATIONS)
   const { loading, error, data } = useQuery(NUMBER_OF_MEASUREMENTS)
+  const classes = useStyles()
+
   if (loading) {
     return <CircularProgress />
   }
@@ -30,23 +40,29 @@ const App = () => {
 
   const pageContent = () => {
     switch (activePage) {
-      case HOME:
-        return <HomeContent numberOfMeasurements={measurementCount} />
+      case ABOUT:
+        return <AboutContent numberOfMeasurements={measurementCount} />
       case VISUALIZATIONS:
         return <VisualizationsContent />
       case SETTINGS:
         return <SettingsContent />
       default:
-        return <HomeContent numberOfMeasurements={measurementCount} />
+        return <AboutContent numberOfMeasurements={measurementCount} />
     }
   }
 
   return (
-    <Container maxWidth='md'>
-      <Header />
-      {pageContent()}
+    <div className={classes.root}>
+      <Grid container direction='column' justify='center' alignItems='center'>
+        <Grid item>
+          <Header />
+        </Grid>
+        <Grid container direction='row' justify='center' alignItems='center'>
+          {pageContent()}
+        </Grid>
+      </Grid>
       <Footer setActivePage={setActivePage} />
-    </Container>
+    </div>
   )
 }
 export default App
