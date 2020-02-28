@@ -13,7 +13,7 @@ module.exports = {
   entry: path.join(__dirname, './src/index.tsx'),
   output: {
     filename: 'build.js',
-    path: path.join(__dirname, '/dist')
+    path: path.join(__dirname, 'build')
   },
   module: {
     rules: [
