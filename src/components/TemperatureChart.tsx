@@ -15,12 +15,16 @@ import {
 import { timestampToDate } from '../utils/utils'
 import ChartProps from '../interfaces/ChartProps'
 import { Button, Menu, MenuItem } from '@material-ui/core'
+import { CirclePicker } from 'react-color'
 import { LINE, BAR } from '../general/constants'
 
 const useStyles = makeStyles({
   container: {
     marginBottom: 30,
     backgroundColor: '#ffffff'
+  },
+  button: {
+    margin: 5
   }
 })
 
@@ -28,6 +32,8 @@ const TemperatureChart = (props: ChartProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState()
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
   const [chartType, setChartType] = useState(BAR)
+  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [selectedColor, setSelectedColor] = useState('#8884d8')
   const classes = useStyles()
   const temperatureMeasurements = props.data.map(
     ({ measurementDate, temperature }) => ({ measurementDate, temperature })
@@ -49,6 +55,21 @@ const TemperatureChart = (props: ChartProps): JSX.Element => {
     setMenuOpen(false)
   }
 
+  const handleColorChangePicker = (color: any): void => {
+    if (color) {
+      setSelectedColor(color.hex)
+    }
+    console.log('selected color', color)
+    setShowColorPicker(!showColorPicker)
+  }
+
+  const colorPicker = (): JSX.Element => {
+    if (showColorPicker) {
+      return <CirclePicker onChange={handleColorChangePicker} />
+    }
+    return <></>
+  }
+
   const chart = (): JSX.Element => {
     if (chartType === BAR) {
       return (
@@ -58,7 +79,7 @@ const TemperatureChart = (props: ChartProps): JSX.Element => {
           <YAxis domain={[10, 40]} />
           <Tooltip />
           <Legend />
-          <Bar dataKey='temperature' fill='#8884d8' />
+          <Bar dataKey='temperature' fill={selectedColor} />
         </BarChart>
       )
     } else if (chartType === LINE) {
@@ -69,7 +90,7 @@ const TemperatureChart = (props: ChartProps): JSX.Element => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type='monotone' dataKey='temperature' stroke='#8884d8' />
+          <Line type='monotone' dataKey='temperature' stroke={selectedColor} />
         </LineChart>
       )
     }
@@ -83,6 +104,7 @@ const TemperatureChart = (props: ChartProps): JSX.Element => {
         aria-controls='simple-menu'
         aria-haspopup='true'
         onClick={recordButtonPosition}
+        className={classes.button}
       >
         Select chart type
       </Button>
@@ -99,7 +121,15 @@ const TemperatureChart = (props: ChartProps): JSX.Element => {
         <MenuItem onClick={(): void => setChartType(BAR)}>Bar chart</MenuItem>
         <MenuItem onClick={(): void => setChartType(LINE)}>Line chart</MenuItem>
       </Menu>
-
+      <Button
+        variant='contained'
+        color='primary'
+        onClick={handleColorChangePicker}
+        className={classes.button}
+      >
+        Select color
+      </Button>
+      {colorPicker()}
       <ResponsiveContainer
         width='95%'
         height={400}

@@ -14,6 +14,7 @@ import {
 } from 'recharts'
 import { Button, Menu, MenuItem } from '@material-ui/core'
 import { timestampToDate } from '../utils/utils'
+import { CirclePicker } from 'react-color'
 import ChartProps from '../interfaces/ChartProps'
 import { LINE, BAR } from '../general/constants'
 
@@ -21,6 +22,9 @@ const useStyles = makeStyles({
   container: {
     marginBottom: 50,
     backgroundColor: '#ffffff'
+  },
+  button: {
+    margin: 5
   }
 })
 
@@ -28,6 +32,8 @@ const HumidityChart = (props: ChartProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState()
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
   const [chartType, setChartType] = useState(LINE)
+  const [showColorPicker, setShowColorPicker] = useState(false)
+  const [selectedColor, setSelectedColor] = useState('#8884d8')
   const humidityMeasurements = props.data.map(
     ({ measurementDate, humidity }) => ({ measurementDate, humidity })
   )
@@ -49,6 +55,21 @@ const HumidityChart = (props: ChartProps): JSX.Element => {
     setMenuOpen(false)
   }
 
+  const handleColorChangePicker = (color: any): void => {
+    if (color) {
+      setSelectedColor(color.hex)
+    }
+    console.log('selected color', color)
+    setShowColorPicker(!showColorPicker)
+  }
+
+  const colorPicker = (): JSX.Element => {
+    if (showColorPicker) {
+      return <CirclePicker onChange={handleColorChangePicker} />
+    }
+    return <></>
+  }
+
   const chart = (): JSX.Element => {
     if (chartType === BAR) {
       return (
@@ -58,7 +79,7 @@ const HumidityChart = (props: ChartProps): JSX.Element => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey='humidity' fill='#8884d8' />
+          <Bar dataKey='humidity' fill={selectedColor} />
         </BarChart>
       )
     } else if (chartType === LINE) {
@@ -69,7 +90,7 @@ const HumidityChart = (props: ChartProps): JSX.Element => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type='monotone' dataKey='humidity' stroke='#8884d8' />
+          <Line type='monotone' dataKey='humidity' stroke={selectedColor} />
         </LineChart>
       )
     }
@@ -100,6 +121,15 @@ const HumidityChart = (props: ChartProps): JSX.Element => {
         <MenuItem onClick={(): void => setChartType(LINE)}>Line chart</MenuItem>
       </Menu>
 
+      <Button
+        variant='contained'
+        color='primary'
+        onClick={handleColorChangePicker}
+        className={classes.button}
+      >
+        Select color
+      </Button>
+      {colorPicker()}
       <ResponsiveContainer
         width='95%'
         height={400}
