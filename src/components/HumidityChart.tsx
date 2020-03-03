@@ -17,32 +17,7 @@ import { timestampToDate } from '../utils/utils'
 import { CirclePicker } from 'react-color'
 import { LINE, BAR } from '../general/constants'
 import { useQuery, useSubscription } from '@apollo/react-hooks'
-import { gql } from 'apollo-boost'
-
-const HUMIDITY_DETAILS = gql`
-  fragment HumidityDetails on Measurement {
-    measurementDate
-    humidity
-  }
-`
-
-const GET_HUMIDITY_MEASUREMENTS = gql`
-  query {
-    measurements {
-      ...HumidityDetails
-    }
-  }
-  ${HUMIDITY_DETAILS}
-`
-
-const HUMIDITY_ADDED = gql`
-  subscription {
-    measurementAdded {
-      ...HumidityDetails
-    }
-  }
-  ${HUMIDITY_DETAILS}
-`
+import { GET_HUMIDITY_MEASUREMENTS, HUMIDITY_ADDED } from '../general/queries'
 
 const useStyles = makeStyles({
   container: {

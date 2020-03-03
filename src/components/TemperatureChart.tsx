@@ -17,32 +17,7 @@ import { Button, Menu, MenuItem, CircularProgress } from '@material-ui/core'
 import { CirclePicker } from 'react-color'
 import { LINE, BAR } from '../general/constants'
 import { useQuery, useSubscription } from '@apollo/react-hooks'
-import { gql } from 'apollo-boost'
-
-const TEMPERATURE_DETAILS = gql`
-  fragment TemperatureDetails on Measurement {
-    measurementDate
-    temperature
-  }
-`
-
-const GET_TEMPERATURE_MEASUREMENTS = gql`
-  query {
-    measurements {
-      ...TemperatureDetails
-    }
-  }
-  ${TEMPERATURE_DETAILS}
-`
-
-const TEMPERATURE_ADDED = gql`
-  subscription {
-    measurementAdded {
-      ...TemperatureDetails
-    }
-  }
-  ${TEMPERATURE_DETAILS}
-`
+import { GET_TEMPERATURE_MEASUREMENTS, TEMPERATURE_ADDED } from '../general/queries'
 
 const useStyles = makeStyles({
   container: {
