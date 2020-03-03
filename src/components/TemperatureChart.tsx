@@ -13,10 +13,36 @@ import {
   Line
 } from 'recharts'
 import { timestampToDate } from '../utils/utils'
-import ChartProps from '../interfaces/ChartProps'
-import { Button, Menu, MenuItem } from '@material-ui/core'
+import { Button, Menu, MenuItem, CircularProgress } from '@material-ui/core'
 import { CirclePicker } from 'react-color'
 import { LINE, BAR } from '../general/constants'
+import { useQuery, useSubscription } from '@apollo/react-hooks'
+import { gql } from 'apollo-boost'
+
+const TEMPERATURE_DETAILS = gql`
+  fragment TemperatureDetails on Measurement {
+    measurementDate
+    temperature
+  }
+`
+
+const GET_TEMPERATURE_MEASUREMENTS = gql`
+  query {
+    measurements {
+      ...TemperatureDetails
+    }
+  }
+  ${TEMPERATURE_DETAILS}
+`
+
+const TEMPERATURE_ADDED = gql`
+  subscription {
+    measurementAdded {
+      ...TemperatureDetails
+    }
+  }
+  ${TEMPERATURE_DETAILS}
+`
 
 const useStyles = makeStyles({
   container: {
@@ -28,23 +54,50 @@ const useStyles = makeStyles({
   }
 })
 
-const TemperatureChart = (props: ChartProps): JSX.Element => {
+const TemperatureChart = () => {
   const [anchorEl, setAnchorEl] = useState()
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
   const [chartType, setChartType] = useState(BAR)
   const [showColorPicker, setShowColorPicker] = useState(false)
   const [selectedColor, setSelectedColor] = useState('#8884d8')
+  const [temperatureMeasurements, setTemperatureMeasurements] = useState([])
+  const [chartKey, setChartKey] = useState('')
   const classes = useStyles()
-  const temperatureMeasurements = props.data.map(
-    ({ measurementDate, temperature }) => ({ measurementDate, temperature })
-  )
-  const temperatureMeasurementsWithTimestampsAsDates = new Array<any>()
-  temperatureMeasurements.forEach(element => {
-    const elem = element
-    elem.measurementDate = timestampToDate(parseInt(element.measurementDate))
-    temperatureMeasurementsWithTimestampsAsDates.push(elem)
+
+  const { loading, error, data } = useQuery(GET_TEMPERATURE_MEASUREMENTS)
+  useSubscription(TEMPERATURE_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log('Measurement added to the database:', subscriptionData.data)
+      const ts = subscriptionData.data.measurementAdded.measurementDate
+      const newMeasurement = subscriptionData.data.measurementAdded
+      newMeasurement.measurementDate = timestampToDate(parseInt(ts))
+      console.log('temperature', newMeasurement.temperature)
+      console.log('before',temperatureMeasurements)
+      temperatureMeasurements.push(newMeasurement)
+      console.log('after',temperatureMeasurements)
+      setTemperatureMeasurements(temperatureMeasurements)
+      setChartKey(newMeasurement.measurementDate)
+    }
   })
-  // console.log(temperatureMeasurementsWithTimestampsAsDates)
+
+  if (loading) {
+    return <CircularProgress />
+  }
+  if (error) {
+    return <p>error</p>
+  }
+  if (data && temperatureMeasurements.length === 0) {
+    const measurementsCount = data.measurements.length
+    const measurements = data.measurements.reverse().slice(0, measurementsCount)
+    const temperatureMeasurementsWithTimestampsAsDates = new Array<any>()
+    measurements.forEach((element: any) => {
+      const elem = element
+      elem.measurementDate = timestampToDate(parseInt(element.measurementDate))
+      temperatureMeasurementsWithTimestampsAsDates.push(elem)
+    })
+
+    setTemperatureMeasurements(temperatureMeasurementsWithTimestampsAsDates)
+  }
 
   const recordButtonPosition = (event: any): void => {
     setAnchorEl(event.currentTarget)
@@ -73,7 +126,7 @@ const TemperatureChart = (props: ChartProps): JSX.Element => {
   const chart = (): JSX.Element => {
     if (chartType === BAR) {
       return (
-        <BarChart data={temperatureMeasurementsWithTimestampsAsDates}>
+        <BarChart key={chartKey} data={temperatureMeasurements}>
           <CartesianGrid strokeDasharray='3 3' />
           <XAxis dataKey='measurementDate' />
           <YAxis domain={[10, 40]} />
@@ -84,7 +137,7 @@ const TemperatureChart = (props: ChartProps): JSX.Element => {
       )
     } else if (chartType === LINE) {
       return (
-        <LineChart data={temperatureMeasurementsWithTimestampsAsDates}>
+        <LineChart key={chartKey} data={temperatureMeasurements}>
           <CartesianGrid strokeDasharray='5 5' />
           <XAxis dataKey='measurementDate' />
           <YAxis />

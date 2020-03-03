@@ -12,11 +12,37 @@ import {
   BarChart,
   Bar
 } from 'recharts'
-import { Button, Menu, MenuItem } from '@material-ui/core'
+import { Button, Menu, MenuItem, CircularProgress } from '@material-ui/core'
 import { timestampToDate } from '../utils/utils'
 import { CirclePicker } from 'react-color'
-import ChartProps from '../interfaces/ChartProps'
 import { LINE, BAR } from '../general/constants'
+import { useQuery, useSubscription } from '@apollo/react-hooks'
+import { gql } from 'apollo-boost'
+
+const HUMIDITY_DETAILS = gql`
+  fragment HumidityDetails on Measurement {
+    measurementDate
+    humidity
+  }
+`
+
+const GET_HUMIDITY_MEASUREMENTS = gql`
+  query {
+    measurements {
+      ...HumidityDetails
+    }
+  }
+  ${HUMIDITY_DETAILS}
+`
+
+const HUMIDITY_ADDED = gql`
+  subscription {
+    measurementAdded {
+      ...HumidityDetails
+    }
+  }
+  ${HUMIDITY_DETAILS}
+`
 
 const useStyles = makeStyles({
   container: {
@@ -28,23 +54,53 @@ const useStyles = makeStyles({
   }
 })
 
-const HumidityChart = (props: ChartProps): JSX.Element => {
+const HumidityChart = () => {
   const [anchorEl, setAnchorEl] = useState()
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
   const [chartType, setChartType] = useState(LINE)
   const [showColorPicker, setShowColorPicker] = useState(false)
   const [selectedColor, setSelectedColor] = useState('#8884d8')
-  const humidityMeasurements = props.data.map(
-    ({ measurementDate, humidity }) => ({ measurementDate, humidity })
-  )
+  const [humidityMeasurements, setHumidityMeasurements] = useState([])
+  const [chartKey, setChartKey] = useState('')
   const classes = useStyles()
-  const humidityMeasurementsWithTimestampsAsDates = new Array<any>()
-  humidityMeasurements.forEach(element => {
-    const elem = element
-    elem.measurementDate = timestampToDate(parseInt(element.measurementDate))
-    humidityMeasurementsWithTimestampsAsDates.push(elem)
+
+  const { loading, error, data } = useQuery(GET_HUMIDITY_MEASUREMENTS)
+  useSubscription(HUMIDITY_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(
+        'Humidity measurement added to the database:',
+        subscriptionData.data
+      )
+      const ts = subscriptionData.data.measurementAdded.measurementDate
+      const newMeasurement = subscriptionData.data.measurementAdded
+      newMeasurement.measurementDate = timestampToDate(parseInt(ts))
+      console.log('humidity', newMeasurement.humidity)
+      console.log('before',humidityMeasurements)
+      humidityMeasurements.push(newMeasurement)
+      console.log('after',humidityMeasurements)
+      setHumidityMeasurements(humidityMeasurements)
+      // Set the key of the chart to make it re-render on arrival of a new measurement
+      setChartKey(newMeasurement.measurementDate)
+    }
   })
-  // console.log(humidityMeasurementsWithTimestampsAsDates)
+
+  if (loading) {
+    return <CircularProgress />
+  }
+  if (error) {
+    return <p>error</p>
+  }
+  if (data && humidityMeasurements.length === 0) {
+    const measurementsCount = data.measurements.length
+    const measurements = data.measurements.reverse().slice(0, measurementsCount)
+    const humidityMeasurementsWithTimestampsAsDates = new Array<any>()
+    measurements.forEach((element: any) => {
+      const elem = element
+      elem.measurementDate = timestampToDate(parseInt(element.measurementDate))
+      humidityMeasurementsWithTimestampsAsDates.push(elem)
+    })
+    setHumidityMeasurements(humidityMeasurementsWithTimestampsAsDates)
+  }
 
   const recordButtonPosition = (event: any): void => {
     setAnchorEl(event.currentTarget)
@@ -73,7 +129,7 @@ const HumidityChart = (props: ChartProps): JSX.Element => {
   const chart = (): JSX.Element => {
     if (chartType === BAR) {
       return (
-        <BarChart data={humidityMeasurementsWithTimestampsAsDates}>
+        <BarChart key={chartKey} data={humidityMeasurements}>
           <CartesianGrid strokeDasharray='3 3' />
           <XAxis dataKey='measurementDate' />
           <YAxis />
@@ -84,7 +140,7 @@ const HumidityChart = (props: ChartProps): JSX.Element => {
       )
     } else if (chartType === LINE) {
       return (
-        <LineChart data={humidityMeasurementsWithTimestampsAsDates}>
+        <LineChart key={chartKey} data={humidityMeasurements}>
           <CartesianGrid strokeDasharray='5 5' />
           <XAxis dataKey='measurementDate' />
           <YAxis />
