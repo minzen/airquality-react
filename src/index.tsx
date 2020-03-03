@@ -5,20 +5,41 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { ApolloClient } from 'apollo-client'
 import { ApolloProvider } from '@apollo/react-hooks'
-import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 import { HttpLink } from 'apollo-link-http'
+import { WebSocketLink } from 'apollo-link-ws'
+import { ApolloLink, split } from 'apollo-link'
+import { getMainDefinition } from 'apollo-utilities'
 
 const APOLLO_SERVER_URI = process.env.REACT_APP_APOLLO_SERVER_URI
+const APOLLO_SERVER_WS_URI = process.env.REACT_APP_APOLLO_SERVER_WS_URI
 
 const cache = new InMemoryCache()
-const link = new HttpLink({
+
+const wsLink = new WebSocketLink({
+  uri: APOLLO_SERVER_WS_URI,
+  options: { reconnect: true, timeout: 60000 }
+})
+
+const httpLink = new HttpLink({
   uri: APOLLO_SERVER_URI,
   headers: {
     authorization: process.env.AUTH
   }
 })
 
-const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+const terminatingLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
+  },
+  wsLink,
+  httpLink
+)
+
+const link = ApolloLink.from([terminatingLink]) 
+
+const client = new ApolloClient({
   cache,
   link
 })
