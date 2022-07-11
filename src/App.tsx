@@ -56,11 +56,11 @@ const App = (): JSX.Element => {
 
   return (
     <div className={classes.root}>
-      <Grid container direction='column' justify='center' alignItems='center'>
+      <Grid container direction='column' justifyContent='center' alignItems='center'>
         <Grid item>
           <Header />
         </Grid>
-        <Grid container direction='row' justify='center' alignItems='center'>
+        <Grid container direction='row' justifyContent='center' alignItems='center'>
           {pageContent()}
         </Grid>
       </Grid>
