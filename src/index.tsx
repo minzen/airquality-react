@@ -10,6 +10,8 @@ import { HttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { ApolloLink, split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
+import { createRoot } from 'react-dom/client'
+import { create } from 'domain'
 
 const APOLLO_SERVER_URI = process.env.REACT_APP_APOLLO_SERVER_URI
 const APOLLO_SERVER_WS_URI = process.env.REACT_APP_APOLLO_SERVER_WS_URI
@@ -44,11 +46,12 @@ const client = new ApolloClient({
   link
 })
 
-ReactDOM.render(
+const container = document.getElementById('root')
+const root = createRoot(container)
+root.render (
   <ApolloProvider client={client}>
     <App />
-  </ApolloProvider>,
-  document.getElementById('root')
+  </ApolloProvider>
 )
 
 // If you want your app to work offline and load faster, you can change
