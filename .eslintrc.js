@@ -16,11 +16,11 @@ module.exports = {
       'error',
       {
         multiline: {
-          delimiter: 'none', // 'none' or 'semi' or 'comma'
+          delimiter: 'semi', // 'none' or 'semi' or 'comma'
           requireLast: true
         },
         singleline: {
-          delimiter: 'none', // 'semi' or 'comma'
+          delimiter: 'semi', // 'semi' or 'comma'
           requireLast: false
         }
       }
