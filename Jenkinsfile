@@ -11,7 +11,7 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("minzen/airquality-react")
+        app = docker.build('minzen/airquality-react')
     }
 
     stage('Test image') {
