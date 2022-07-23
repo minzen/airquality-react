@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
@@ -11,7 +10,6 @@ import { WebSocketLink } from 'apollo-link-ws'
 import { ApolloLink, split } from 'apollo-link'
 import { getMainDefinition } from 'apollo-utilities'
 import { createRoot } from 'react-dom/client'
-import { create } from 'domain'
 
 const APOLLO_SERVER_URI = process.env.REACT_APP_APOLLO_SERVER_URI
 const APOLLO_SERVER_WS_URI = process.env.REACT_APP_APOLLO_SERVER_WS_URI
