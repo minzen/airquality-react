@@ -1,0 +1,15 @@
+version: '3.5'
+
+networks:
+  gyarados:
+    external: true
+
+services:
+  airquality-react:
+    image: minzen/airquality-react:latest
+    container_name: airquality-react
+    restart: always
+    networks:
+      - gyarados
+    ports:
+      - 8081:8080
