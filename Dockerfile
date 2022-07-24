@@ -10,6 +10,8 @@ RUN npm --legacy-peer-deps install
 
 COPY . .
 
+COPY ./environment/.env ./
+
 RUN npm run build 
 
 EXPOSE 8081
