@@ -39,7 +39,7 @@ node {
     }
 
     stage('Deploy docker image on the remote server') {
-        withCredentials([sshUserPrivateKey(credentialsId: 'Jenkins-user', keyFileVariable: 'key', passphraseVariable: '', usernameVariable: 'userName')]) {
+        withCredentials([sshUserPrivateKey(credentialsId: 'Jenkins-user', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
             remote.user = userName
             remote.identityFile = identity
 
