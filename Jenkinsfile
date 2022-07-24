@@ -43,6 +43,7 @@ node {
             remote.user = userName
             remote.identityFile = identity
 
+            sshCommand remote: remote, command: 'mkdir -p ~/docker/deployments/airquality-react'
             sshPut remote: remote, from: 'airquality-react/deployment/*', into: '~/docker/deployments/airquality-react/'
             sshCommand remote: remote, command: 'cd ~/docker/deployments/airquality-react && chmod a+x redeploy.sh && ./redeploy.sh'
         }
