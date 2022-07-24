@@ -1,5 +1,9 @@
 node {
     def app
+    def remote = [:]
+    remote.name = "v220220737425195934"
+    remote.host = "202.61.226.111"
+    remote.allowAnyHosts = true
 
     stage('Clone repository') {
         /* Let's make sure we have the repository cloned to our workspace */
@@ -33,4 +37,16 @@ node {
             app.push("latest")
         }
     }
+
+    stage('Deploy docker image on the remote server') {
+        withCredentials([usernamePassword(credentialsId: 'sshUserAcct', passwordVariable: 'password', usernameVariable: 'userName')]) {
+            remote.user = userName
+            remote.password = password
+
+            sshCommand remote: remote, command: 'mkdir -p ~/docker/deployments/airquality-react'
+            sshPut remote: remote, from: 'airquality-react/deployment/*', into: '~/docker/deployments/airquality-react/'
+            sshCommand remote: remote, command: 'cd ~/docker/deployments/airquality-react && chmod a+x redeploy.sh && ./redeploy.sh'
+        }
+    }
 }
+
