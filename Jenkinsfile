@@ -39,9 +39,9 @@ node {
     }
 
     stage('Deploy docker image on the remote server') {
-        withCredentials([usernamePassword(credentialsId: 'sshUserAcct', passwordVariable: 'password', usernameVariable: 'userName')]) {
+        withCredentials([sshUserPrivateKey(credentialsId: 'Jenkins-user', keyFileVariable: 'key', passphraseVariable: '', usernameVariable: 'userName')]) {
             remote.user = userName
-            remote.password = password
+            remote.identityFile = identity
 
             sshCommand remote: remote, command: 'mkdir -p ~/docker/deployments/airquality-react'
             sshPut remote: remote, from: 'airquality-react/deployment/*', into: '~/docker/deployments/airquality-react/'
