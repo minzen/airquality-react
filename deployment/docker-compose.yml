@@ -6,7 +6,7 @@ networks:
 
 services:
   airquality-react:
-    image: minzen/airquality-react:latest
+    image: juoksijapoika/airquality-react:latest
     container_name: airquality-react
     volumes:
       - /opt/configuration/airquality-react:/app/environment
