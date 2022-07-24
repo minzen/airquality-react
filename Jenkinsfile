@@ -14,7 +14,7 @@ node {
     stage('Build image') {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
-
+        sh 'cp /opt/configuration/airquality-react/.env $(pwd)/airquality-react/.env'
         app = docker.build('juoksijapoika/airquality-react')
     }
 

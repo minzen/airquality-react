@@ -8,8 +8,6 @@ services:
   airquality-react:
     image: juoksijapoika/airquality-react:latest
     container_name: airquality-react
-    volumes:
-      - /opt/configuration/airquality-react/.env:/app/.env
     restart: always
     networks:
       - gyarados
