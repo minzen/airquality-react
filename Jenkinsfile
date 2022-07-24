@@ -47,7 +47,7 @@ node {
             sshCommand remote: remote, command: 'cp /opt/configuration/airquality-react/.env /home/jenkins/docker/deployments/airquality-react/'
             sshPut remote: remote, from: './deployment/docker-compose.yml', into: '/home/jenkins/docker/deployments/airquality-react/'
             sshPut remote: remote, from: './deployment/redeploy.sh', into: '/home/jenkins/docker/deployments/airquality-react/'
-            sshCommand remote: remote, command: 'cd /home/jenkins/docker/deployments/airquality-react && chmod a+x redeploy.sh && ./redeploy.sh'
+            sshCommand remote: remote, command: 'cd /home/jenkins/docker/deployments/airquality-react; chmod a+x redeploy.sh; ./redeploy.sh'
         }
     }
 }
