@@ -12,4 +12,4 @@ services:
     networks:
       - gyarados
     ports:
-      - "202.61.226.111:8081:8081"
+      - "8081:8080"
